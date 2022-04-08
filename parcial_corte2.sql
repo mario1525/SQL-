@@ -7,8 +7,7 @@ create table cines (
 );
 
 create table peliculas (
-      id int primary key,
-      id_cines int,
+      id int primary key,      
       nombre varchar,
       director varchar,
       genero varchar,
@@ -26,10 +25,8 @@ create table protagonista (
 
 create table precio (
 	id primary key,
-	ds int,
-	fs int,
-	fes int,
-	estu int
+	fecha varchar,
+	valor int	
 );
 
 create table proyecciones (
@@ -62,5 +59,56 @@ ALTER TABLE peliculas
 ALTER TABLE peliculas 
     ADD CONSTRAINT relacion7 FOREIGN KEY (id_prota3) REFERENCES protagonista(id);
 
+insert into cines values (11, 'cc plaza cll 80#23:53', 32165448, 4);
+insert into cines values (12, 'cc hogar cll 80#23:53', 32165448, 3);
+insert into cines values (13, 'cc hola cll 80#23:53', 32165448, 4);
+
+insert into protagonista values (31 , 'richard');
+insert into protagonista values (32 , 'manuel');
+insert into protagonista values (33 , 'maria');
+insert into protagonista values (34 , 'juan');
+insert into protagonista values (35 , 'robert');
+
+insert into peliculas values (21, 'homer', 'jorge','comedia', 31 , 33 ,35 , 'todo publico');
+insert into peliculas values (23, 'casa', 'pedro','accion', 31 , 33 ,35 , 'todo publico');
+insert into peliculas values (24, 'locos', 'jose','terror', 34 , 33 ,32 , 'mayores de 18');
+insert into peliculas values (25, 'max', 'angel','comedia', 32 , 33 ,35 , 'todo publico');
+
+insert into horario values (41 , 'de 8 a 12');
+insert into horario values (42 , 'de 13 a 15');
+insert into horario values (43 , 'de 16 a 19');
+insert into horario values (44 , 'de 20 a 23');
+insert into horario values (45 , 'de 23 a 1');
+
+
+insert into precio values (51 , 'dia de semana' , 7000);
+insert into precio values (52 , 'fin de semana' , 8000);
+insert into precio values (53 , 'festivo' , 6000);
+insert into precio values (54 , 'estudianes ' , 5000);
+insert into precio values (54 , 'fechas especiales ' , 4500);
+
+
+insert into proyecciones values (61, 11 , 21, 43 , 2, 53 );
+insert into proyecciones values (62, 12 , 23, 43 , 2, 53 );
+insert into proyecciones values (63, 13 , 24, 43 , 2, 53 );
+
+
+
+//consulta1\\
+select nombre 
+from peliculas 
+where genero = 'terror';
+
+
+
+
+//consulta2\\
+create view protago as 
+ select id_prota, id_prota2, id_prota3 
+from peliculas
+where id_prota = (select id from protagonista where nombre = 'richart') or 
+      id_prota2 = (select id from protagonista where nombre = 'richart') or
+      id_prota3 = (select id from protagonista where nombre = 'richart')
+ 
 
 
