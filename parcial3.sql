@@ -10,6 +10,7 @@ create table estudiante (
 create table matricula (
       id int primary key,
       fecha_matricula date,
+      fecha_fsemestre date 
       id_estudiante int
 );  
 
@@ -25,8 +26,6 @@ create table asignatura (
 	id_facultad int
 );   
 
-   
-
 ALTER TABLE matricula
     ADD CONSTRAINT relacion FOREIGN KEY (id_estudiante) REFERENCES estudiante(id);
 
@@ -35,9 +34,6 @@ ALTER TABLE estudiante
 
 ALTER TABLE asignatura
     ADD CONSTRAINT relacion3 FOREIGN KEY (id_facultad) REFERENCES facultad(id);
-
-
-
 
 insert into facultad values (31,'ingenieria');
 insert into facultad values (32,'derecho');
@@ -63,63 +59,49 @@ insert into estudiante values (17, 'jorge', 1234,  3213584582,false,32);
 insert into estudiante values (18, 'hugo',1234,  3213584582,false,31);
 insert into estudiante values (19, 'juana',1234, 3213584582,false,34);
 
-insert into matricula values (21,'24/02/2022',11);
-insert into matricula values (22,'24/02/2022',13);
-insert into matricula values (23,'24/02/2022',12);
-insert into matricula values (24,'24/02/2022',14);
-insert into matricula values (25,'24/02/2022',15);
+insert into matricula values (21,'24/02/2022','07/06/2022',11);
+insert into matricula values (22,'24/02/2022','31/05/2022',13);
+insert into matricula values (23,'24/02/2022','15/06/2022',12);
+insert into matricula values (24,'24/02/2022','07/06/2022',14);
+insert into matricula values (25,'24/02/2022','07/06/2022',15);
 
 
+//////////////////////////////////////////////primer punto\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-// busqueda primera actividad 
+create view matriculados2 as 
+ select nombre 
+from estudiante
+where id in (select id_estudiante from matricula ) and estado = true
 
-SELECT *
-FROM estudiante
-INNER JOIN matricula
-ON estudiante.id = matricula.id_estudiante;
+select * from matriculados2
 
-SELECT *
-FROM estudiante
-left JOIN matricula
-ON estudiante.id = matricula.id_estudiante;
+////////////////////////////////////////// segundo punto \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-SELECT *
-FROM estudiante
-right JOIN matricula
-ON estudiante.id = matricula.id_estudiante;
+ DELIMITER $$
+CREATE PROCEDURE estadoestudiante ( IN fecha date
+) BEGIN
 
-SELECT *
-FROM estudiante
-full outer JOIN matricula
-ON estudiante.id = matricula.id_estudiante
-where nombre = 'mario';
+  DECLARE listo boolean DEFAULT false;
+  DECLARE v_id int;  
+  DECLARE v_nombre VARCHAR(120);
+  DECLARE v_estado boolean;  
+  
 
-//busqueda segunda actividad 
+DECLARE c_estudiante CURSOR for SELECT id, estado , nombre  
+                                FROM estudiante where id in 
+								(select id_estudiante 
+                                 from matricula 
+                                 where fecha_matricula <fecha and fecha_fsemestre <= fecha);
+DECLARE CONTINUE HANDLER for SQLSTATE '02000' SET listo = true;
+OPEN c_estudiante;
+c_estudianteLoop:LOOP
+FETCH c_estudiante INTO v_id, v_estado, v_nombre;
+  if listo THEN LEAVE c_estudianteLoop;
+  END if;
+  UPDATE estudiante set estado = false WHERE id = v_id;
+END Loop c_estudianteLoop;
+CLOSE c_estudiante;
+END$$
+DELIMITER ;
 
-SELECT *
-FROM estudiante
-INNER JOIN facultad ON estudiante.id_facultad = facultad.id 
-INNER JOIN asignatura ON asignatura.id_facultad = facultad.id
-inner join matricula on  matricula.id_estudiante = estudiante.id;
-
-SELECT *
-FROM estudiante
-left JOIN facultad ON estudiante.id_facultad = facultad.id 
-left JOIN asignatura ON asignatura.id_facultad = facultad.id
-left join matricula on  matricula.id_estudiante = estudiante.id;
-
-SELECT *
-FROM estudiante
-right JOIN facultad ON estudiante.id_facultad = facultad.id 
-right JOIN asignatura ON asignatura.id_facultad = facultad.id
-right join matricula on  matricula.id_estudiante = estudiante.id;
-
-SELECT *
-FROM estudiante
-full outer JOIN facultad ON estudiante.id_facultad = facultad.id 
-full outer JOIN asignatura ON asignatura.id_facultad = facultad.id
-full outer join matricula on  matricula.id_estudiante = estudiante.id
-where nombre = 'mario';
-
-
-
+call estadoestudiante ('20/05/2022');
