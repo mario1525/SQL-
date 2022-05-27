@@ -59,12 +59,11 @@ insert into estudiante values (17, 'jorge', 1234,  3213584582,false,32);
 insert into estudiante values (18, 'hugo',1234,  3213584582,false,31);
 insert into estudiante values (19, 'juana',1234, 3213584582,false,34);
 
-insert into matricula values (21,'24/02/2022','07/06/2022',11);
-insert into matricula values (22,'24/02/2022','31/05/2022',13);
-insert into matricula values (23,'24/02/2022','15/06/2022',12);
-insert into matricula values (24,'24/02/2022','07/06/2022',14);
-insert into matricula values (25,'24/02/2022','07/06/2022',15);
-
+insert into matricula values (21,'2022-02-24','2022-06-07',11);
+insert into matricula values (22,'2022-02-24','2022-05-31',13);
+insert into matricula values (23,'2022-02-24','2022-06-15',12);
+insert into matricula values (24,'2022-02-24','2022-06-07',14);
+insert into matricula values (25,'2022-02-24','2022-06-07',15);
 
 //////////////////////////////////////////////primer punto\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
